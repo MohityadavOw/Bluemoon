@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluemoon • Telegram Community</title>
+  <style>
+    :root {
+      --bg-dark: #050816;
+      --bg-card: rgba(15, 23, 42, 0.95);
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.2);
+      --accent-strong: #0ea5e9;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border-subtle: rgba(148, 163, 184, 0.3);
+      --danger: #f97373;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #0b1120, #020617 55%, #020617 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* --- Layout --- */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      background: linear-gradient(120deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.75));
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0.75rem;
+      z-index: 50;
+      transition: all 0.25s ease;
+    }
+
+    header.header-scrolled {
+      padding-block: 0.55rem;
+      border-radius: 0.9rem;
+      background: rgba(15, 23, 42, 0.96);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #e0f2fe, #38bdf8 40%, #0f172a 75%);
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.7);
+      position: relative;
+      overflow: hidden;
+      animation: logoPulse 3.2s ease-in-out infinite;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      border: 2px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .brand-text-main {
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .brand-text-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    nav {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    nav button,
+    nav a {
+      color: var(--text-soft);
+      text-decoration: none;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    nav button:hover,
+    nav button.is-active,
+    nav a:hover,
+    nav a.is-active {
+      color: var(--accent);
+      border-color: var(--accent-soft);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .pill {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: 2.2rem;
+      margin-top: 2.1rem;
+      align-items: center;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--accent-soft);
+      font-size: 0.75rem;
+      color: var(--accent);
+      width: fit-content;
+    }
+
+    .eyebrow span.tag {
+      padding: 0.08rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: var(--text-soft);
+      font-size: 0.7rem;
+    }
+
+    h1 {
+      font-size: clamp(2.15rem, 4vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+    }
+
+    h1 span.highlight {
+      background: linear-gradient(120deg, #38bdf8, #a855f7, #38bdf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 220% 220%;
+      animation: gradientShift 7s ease-in-out infinite;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-soft);
+      max-width: 38rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .btn-primary,
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.6rem 1.4rem;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-strong), #6366f1);
+      box-shadow: 0 18px 45px rgba(37, 99, 235, 0.55);
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(248, 250, 252, 0.25), transparent);
+      transform: translateX(-120%);
+      pointer-events: none;
+    }
+
+    .btn-primary.btn-attention::after {
+      animation: shineButton 1.2s ease-out;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 55px rgba(37, 99, 235, 0.75);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: var(--border-subtle);
+      color: var(--text-soft);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent-soft);
+      background: rgba(15, 23, 42, 1);
+      color: var(--accent);
+    }
+
+    .hint-text {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    /* --- Stats --- */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.3rem;
+    }
+
+    .stat {
+      flex: 1 1 120px;
+      min-width: 120px;
+      padding: 0.8rem 0.9rem;
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.96));
+      transform-origin: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .stat-tag {
+      font-size: 0.7rem;
+      margin-top: 0.15rem;
+      color: var(--accent);
+    }
+
+    /* --- Right Column / Live card --- */
+    .hero-right {
+      position: relative;
+    }
+
+    .neon-orbit {
+      position: absolute;
+      inset: -12%;
+      background: radial-gradient(circle at 15% 0, rgba(56, 189, 248, 0.2), transparent 55%),
+                  radial-gradient(circle at 85% 100%, rgba(129, 140, 248, 0.35), transparent 60%);
+      opacity: 0.9;
+      filter: blur(16px);
+      z-index: -1;
+      transition: transform 0.2s ease-out;
+    }
+
+    .glass-card {
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.2rem 1.1rem;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.45), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: 0 26px 65px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+      transform-origin: center;
+      transition: transform 0.22s ease-out, box-shadow 0.22s ease-out;
+      animation: floatCard 12s ease-in-out infinite;
+    }
+
+    .card-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4ade80;
+      box-shadow: 0 0 12px rgba(74, 222, 128, 0.8);
+    }
+
+    .tiny-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(15, 23, 42, 0.9);
+      background: rgba(226, 232, 240, 0.9);
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+    }
+
+    .conversation-preview {
+      margin-top: 0.5rem;
+      padding: 0.75rem 0.7rem;
+      border-radius: 0.9rem;
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      max-height: 240px;
+      overflow: hidden;
+    }
+
+    .msg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      font-size: 0.65rem;
+      font-weight: 600;
+      animation: softBlink 6s ease-in-out infinite;
+    }
+
+    .avatar-owner {
+      background: radial-gradient(circle at 30% 0, #fee2e2, #ef4444);
+    }
+
+    .avatar-creator {
+      background: radial-gradient(circle at 30% 0, #fef3c7, #f59e0b);
+      animation-delay: 1.5s;
+    }
+
+    .avatar-member {
+      background: radial-gradient(circle at 30% 0, #e0f2fe, #3b82f6);
+      animation-delay: 3s;
+    }
+
+    .msg-bubble {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 0.7rem;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      flex: 1;
+    }
+
+    .msg-meta {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      margin-bottom: 0.1rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 0.4rem;
+    }
+
+    .msg-text {
+      font-size: 0.74rem;
+    }
+
+    .member-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding-top: 0.7rem;
+      margin-top: 0.5rem;
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+      font-size: 0.75rem;
+    }
+
+    .member-avatars {
+      display: flex;
+      align-items: center;
+    }
+
+    .mini-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      margin-left: -6px;
+      background: radial-gradient(circle at 40% 0, #e0f2fe, #3b82f6);
+    }
+
+    .mini-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .member-label {
+      font-size: 0.72rem;
+    }
+
+    .card-footer-hint {
+      font-size: 0.68rem;
+      color: rgba(15, 23, 42, 0.9);
+      background: rgba(226, 232, 240, 0.95);
+      padding: 0.12rem 0.6rem;
+      border-radius: 999px;
+      align-self: flex-start;
+    }
+
+    /* --- Section: About / Highlights / Rules / FAQ on home page --- */
+    .section {
+      margin-top: 2.5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+      max-width: 28rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.1rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 1.1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 0.9rem 0.95rem;
+      font-size: 0.84rem;
+      position: relative;
+      overflow: hidden;
+      transform-origin: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      border-color: rgba(56, 189, 248, 0.55);
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.18), rgba(15, 23, 42, 0.98));
+    }
+
+    .card h3 {
+      font-size: 0.9rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      padding: 0.16rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid var(--accent-soft);
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      background: rgba(15, 23, 42, 0.95);
+      position: relative;
+      z-index: 1;
+    }
+
+    .card p {
+      position: relative;
+      z-index: 1;
+      color: var(--text-soft);
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .rules-list {
+      background: var(--bg-card);
+      border-radius: 1.1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+
+    .rules-list h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+
+    ul.clean {
+      list-style: none;
+      margin-top: 0.3rem;
+    }
+
+    ul.clean li {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+      color: var(--text-soft);
+      font-size: 0.83rem;
+    }
+
+    ul.clean li span.bullet {
+      font-size: 1rem;
+      line-height: 1.1;
+      color: var(--accent);
+      margin-top: -1px;
+    }
+
+    .safety-card {
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.98));
+      border-radius: 1.1rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 1rem;
+      font-size: 0.83rem;
+    }
+
+    .safety-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.85);
+      font-size: 0.72rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .safety-highlight {
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+    }
+
+    .faq-item {
+      border-radius: 0.9rem;
+      border: 1px solid var(--border-subtle);
+      padding: 0.7rem 0.8rem;
+      background: rgba(15, 23, 42, 0.9);
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .faq-item:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.55);
+      box-shadow: 0 16px 32px rgba(15, 23, 42, 0.85);
+    }
+
+    .faq-q {
+      font-size: 0.82rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .faq-a {
+      color: var(--text-soft);
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding-top: 0.9rem;
+    }
+
+    footer span strong {
+      color: var(--accent);
+    }
+
+    /* --- FULL PAGE PANELS (second pages) --- */
+    .panel-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 5rem 1.25rem 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(18px);
+      transition: opacity 0.28s ease-out, transform 0.3s ease-out;
+      z-index: 40;
+    }
+
+    .panel-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .panel-inner {
+      width: 100%;
+      max-width: 960px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 1.3rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 32px 80px rgba(15, 23, 42, 0.95);
+      padding: 1.3rem 1.4rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .panel-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid rgba(31, 41, 55, 1);
+      padding-bottom: 0.75rem;
+    }
+
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .panel-tagline {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .panel-close {
+      border-radius: 999px;
+      border: 1px solid rgba(51, 65, 85, 1);
+      background: rgba(15, 23, 42, 1);
+      padding: 0.32rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .panel-close:hover {
+      border-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel-body {
+      font-size: 0.86rem;
+      color: var(--text-soft);
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.2fr);
+      gap: 1.3rem;
+    }
+
+    .panel-body h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+      color: var(--text-main);
+    }
+
+    .panel-list {
+      list-style: none;
+      margin-top: 0.25rem;
+    }
+
+    .panel-list li {
+      margin-top: 0.25rem;
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .panel-list li span.bullet {
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+
+    .panel-highlight-box {
+      border-radius: 1rem;
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.22), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 0.9rem 1rem;
+      font-size: 0.82rem;
+    }
+
+    .panel-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .panel-meta {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-pill {
+      border-radius: 999px;
+      padding: 0.18rem 0.6rem;
+      border: 1px dashed rgba(148, 163, 184, 0.7);
+      font-size: 0.72rem;
+    }
+
+    /* --- Reveal animations --- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* --- Keyframes --- */
+    @keyframes logoPulse {
+      0%, 100% {
+        box-shadow: 0 0 22px rgba(56, 189, 248, 0.6);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 36px rgba(56, 189, 248, 0.95);
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes floatCard {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+
+    @keyframes softBlink {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 14px rgba(248, 250, 252, 0.35);
+      }
+    }
+
+    @keyframes shineButton {
+      0% {
+        transform: translateX(-120%);
+      }
+      100% {
+        transform: translateX(120%);
+      }
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 840px) {
+      header {
+        flex-wrap: wrap;
+        border-radius: 1rem;
+      }
+
+      nav {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero-right {
+        order: -1;
+      }
+
+      .cards-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .rules-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .faq-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding-inline: 1rem;
+      }
+
+      header {
+        padding-inline: 0.85rem;
+      }
+
+      .cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .panel-inner {
+        padding-inline: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="brand-text-main">BLUEMOON</div>
+          <div class="brand-text-sub">Telegram Community • Since 2025</div>
+        </div>
+      </div>
+      <nav>
+        <button type="button" data-panel="about">About</button>
+        <button type="button" data-panel="highlights">Highlights</button>
+        <button type="button" data-panel="rules">Rules</button>
+        <button type="button" data-panel="faq">FAQ</button>
+        <div class="pill">
+          <span id="headerMemberCount">1200+ members</span>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Hero (Home page content) -->
+    <main>
+      <section class="hero reveal" aria-labelledby="hero-title">
+        <div class="hero-left">
+          <div class="eyebrow">
+            Official Telegram Group
+            <span class="tag">Owner • PCM</span>
+            <span class="tag">Created by Zoro</span>
+          </div>
+          <h1 id="hero-title">
+            A <span class="highlight">real & active</span> space for
+            smart conversations.
+          </h1>
+          <p class="hero-subtitle">
+            Bluemoon is a curated Telegram community of over
+            <strong>1200+ members</strong>. Built and managed by
+            <strong>PCM</strong> and originally created by
+            <strong>Zoro</strong>, the group focuses on chill yet
+            meaningful discussions, daily updates, and respectful vibes.
+          </p>
+
+          <div class="hero-actions">
+            <!-- Replace href with your real Telegram invite link -->
+            <a class="btn-primary" id="joinButton" href="#" target="_blank" rel="noreferrer">
+              <span>Join Bluemoon on Telegram</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <button class="btn-ghost" type="button" id="copyInvite">
+              <span>Copy invite link</span>
+            </button>
+          </div>
+          <p class="hint-text">
+            No spam • No random forwards • Clean, moderated community.
+          </p>
+
+          <div class="stats-row" aria-label="Group statistics">
+            <div class="stat reveal" data-count-from="1184" data-count-to="1200">
+              <div class="stat-label">Members</div>
+              <div class="stat-value" id="memberCount">1200+</div>
+              <div class="stat-tag">Growing every week</div>
+            </div>
+            <div class="stat reveal">
+              <div class="stat-label">Owner</div>
+              <div class="stat-value">PCM</div>
+              <div class="stat-tag">Active moderation</div>
+            </div>
+            <div class="stat reveal">
+              <div class="stat-label">Created by</div>
+              <div class="stat-value">Zoro</div>
+              <div class="stat-tag">Vision & community</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-right reveal">
+          <div class="neon-orbit" aria-hidden="true" id="neonOrbit"></div>
+          <aside class="glass-card" aria-label="Live group preview" id="previewCard">
+            <div class="card-header-top">
+              <div style="display:flex;align-items:center;gap:0.45rem;">
+                <div class="status-dot" aria-hidden="true"></div>
+                <span style="font-size:0.8rem;font-weight:500;">Bluemoon • Live</span>
+              </div>
+              <span class="tiny-label">Telegram preview</span>
+            </div>
+
+            <div class="conversation-preview">
+              <div class="msg-row">
+                <div class="avatar avatar-owner">P</div>
+                <div class="msg-bubble">
+                  <div class="msg-meta">
+                    <span>PCM • Owner</span>
+                    <span>09:12</span>
+                  </div>
+                  <div class="msg-text">
+                    Welcome to Bluemoon ✨ Maintain respect, stay active, and
+                    enjoy the discussions.
+                  </div>
+                </div>
+              </div>
+
+              <div class="msg-row">
+                <div class="avatar avatar-creator">Z</div>
+                <div class="msg-bubble">
+                  <div class="msg-meta">
+                    <span>Zoro • Creator</span>
+                    <span>09:13</span>
+                  </div>
+                  <div class="msg-text">
+                    Group is for genuine conversations only. No spam, no
+                    forwarding random content. Keep it clean 💬
+                  </div>
+                </div>
+              </div>
+
+              <div class="msg-row">
+                <div class="avatar avatar-member">U</div>
+                <div class="msg-bubble">
+                  <div class="msg-meta">
+                    <span>New Member</span>
+                    <span>09:15</span>
+                  </div>
+                  <div class="msg-text">
+                    Happy to join Bluemoon! Looking forward to learning and
+                    chilling with you all. 🌙
+                  </div>
+                </div>
+              </div>
+
+              <div class="member-strip">
+                <div class="member-avatars" aria-hidden="true">
+                  <div class="mini-avatar"></div>
+                  <div class="mini-avatar"></div>
+                  <div class="mini-avatar"></div>
+                </div>
+                <div class="member-label">
+                  <strong id="liveMemberCount">1200+</strong> people are online
+                  or active daily.
+                </div>
+                <span class="card-footer-hint">Bluemoon • Real community</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- SHORT PREVIEW SECTIONS ON HOME PAGE -->
+      <section class="section" aria-label="Highlights preview">
+        <div class="section-header reveal">
+          <div>
+            <h2 class="section-title">Quick look at Bluemoon</h2>
+            <p class="section-subtitle">
+              Want full details? Click any card or navigation to open a dedicated page about the group.
+            </p>
+          </div>
+          <button type="button" class="btn-ghost" data-panel="about">Open full about page</button>
+        </div>
+
+        <div class="cards-grid">
+          <article class="card reveal" data-panel="highlights">
+            <div class="badge">Overview</div>
+            <h3>What is Bluemoon?</h3>
+            <p>
+              A chill but serious Telegram community with a clean vibe, active members, and proper moderation.
+            </p>
+          </article>
+
+          <article class="card reveal" data-panel="rules">
+            <div class="badge">Rules</div>
+            <h3>Simple & strict</h3>
+            <p>
+              No spam, no hate, no random useless forwards. Tap to see full rulebook and safety details.
+            </p>
+          </article>
+
+          <article class="card reveal" data-panel="faq">
+            <div class="badge">FAQ</div>
+            <h3>Common questions</h3>
+            <p>
+              Who can join? Is it free? How active is PCM? Open the FAQ page to know everything in detail.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="reveal">
+      <span>
+        Bluemoon Telegram Group • Owned by <strong>PCM</strong> • Created by
+        <strong>Zoro</strong>
+      </span>
+      <span>Built for real conversations, not random chaos.</span>
+    </footer>
+  </div>
+
+  <!-- SECOND PAGES (PANELS) -->
+  <!-- About Page Panel -->
+  <section class="panel-overlay" id="panel-about" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-header-row">
+        <div>
+          <div class="panel-title">About Bluemoon</div>
+          <div class="panel-tagline">Know the story behind the community</div>
+        </div>
+        <button type="button" class="panel-close" data-panel-close>
+          <span aria-hidden="true">←</span>
+          <span>Back to home</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div>
+          <h3>Community in one line</h3>
+          <p>
+            Bluemoon is a 1200+ members Telegram group where people join not just
+            to pass time, but to stay connected, updated, and respected.
+          </p>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span>Owner <strong>PCM</strong> keeps the group balanced and non-toxic.</span></li>
+            <li><span class="bullet">•</span><span>Created by <strong>Zoro</strong> with a focus on genuine interactions.</span></li>
+            <li><span class="bullet">•</span><span>Members from different backgrounds, but same chill energy.</span></li>
+          </ul>
+
+          <h3 style="margin-top:0.8rem;">What you’ll find inside</h3>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span>Casual chats without becoming spammy or irritating.</span></li>
+            <li><span class="bullet">•</span><span>Daily engagement, reactions, and fun moments.</span></li>
+            <li><span class="bullet">•</span><span>A place where you can stay silent some days and active on others—no pressure.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="panel-highlight-box">
+            <h3>Who runs Bluemoon?</h3>
+            <p>
+              <strong>PCM</strong> actively manages the group, looks after reports, and
+              ensures the vibe stays friendly. <strong>Zoro</strong> laid the base
+              and vision for what Bluemoon stands for.
+            </p>
+            <p style="margin-top:0.5rem;">
+              Together, they make sure Bluemoon doesn’t feel like a random public group
+              but more like a community you slowly become comfortable in.
+            </p>
+          </div>
+          <div class="panel-actions">
+            <a class="btn-primary" href="#" id="aboutJoinLink" target="_blank" rel="noreferrer">Join Bluemoon now ↗</a>
+            <button type="button" class="btn-ghost" data-panel-close>Back</button>
+          </div>
+          <div class="panel-meta">
+            <span class="panel-pill">1200+ members • Active daily</span>
+            <span>Owner: PCM • Creator: Zoro</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlights Page Panel -->
+  <section class="panel-overlay" id="panel-highlights" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-header-row">
+        <div>
+          <div class="panel-title">Highlights & vibe</div>
+          <div class="panel-tagline">What makes Bluemoon feel different</div>
+        </div>
+        <button type="button" class="panel-close" data-panel-close>
+          <span aria-hidden="true">←</span>
+          <span>Back to home</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div>
+          <h3>Core highlights</h3>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span><strong>Curated community</strong> – not just random adds, real people.</span></li>
+            <li><span class="bullet">•</span><span><strong>Active yet calm</strong> – chats move, but not in a chaotic way.</span></li>
+            <li><span class="bullet">•</span><span><strong>Respectful culture</strong> – arguments allowed, disrespect not allowed.</span></li>
+          </ul>
+
+          <h3 style="margin-top:0.8rem;">Daily experience</h3>
+          <p>
+            On a normal day, you’ll see check-ins, random memes, mini debates, and
+            people just sharing how their day went. Some days are silent, some days
+            are super active—but overall Bluemoon always feels alive.
+          </p>
+        </div>
+        <div>
+          <div class="panel-highlight-box">
+            <h3>Why you might like it</h3>
+            <ul class="panel-list">
+              <li><span class="bullet">•</span><span>You want a group that doesn’t feel cringe or try-hard.</span></li>
+              <li><span class="bullet">•</span><span>You like slow, meaningful connections instead of forced networking.</span></li>
+              <li><span class="bullet">•</span><span>You enjoy just watching conversations even when you’re not active.</span></li>
+            </ul>
+          </div>
+          <div class="panel-actions">
+            <a class="btn-primary" href="#" id="highlightJoinLink" target="_blank" rel="noreferrer">Open Bluemoon on Telegram ↗</a>
+            <button type="button" class="btn-ghost" data-panel-close>Back</button>
+          </div>
+          <div class="panel-meta">
+            <span class="panel-pill">Real people • Real talks</span>
+            <span>No bots • No forced engagement</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rules Page Panel -->
+  <section class="panel-overlay" id="panel-rules" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-header-row">
+        <div>
+          <div class="panel-title">Rules & moderation</div>
+          <div class="panel-tagline">Simple rules, strict implementation</div>
+        </div>
+        <button type="button" class="panel-close" data-panel-close>
+          <span aria-hidden="true">←</span>
+          <span>Back to home</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div>
+          <h3>Core rules</h3>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span>No abusive language, personal attacks, or harassment.</span></li>
+            <li><span class="bullet">•</span><span>No spam, self promotion, or random bulk forwards.</span></li>
+            <li><span class="bullet">•</span><span>No sharing of personal chats, screenshots, or DMs without consent.</span></li>
+            <li><span class="bullet">•</span><span>No illegal, NSFW, or clearly harmful content.</span></li>
+          </ul>
+
+          <h3 style="margin-top:0.8rem;">What happens if rules break?</h3>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span>Minor issues → warning from PCM / admins.</span></li>
+            <li><span class="bullet">•</span><span>Repeated issues → mute or temporary removal.</span></li>
+            <li><span class="bullet">•</span><span>Major violation → direct ban to protect others.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="panel-highlight-box">
+            <h3>How to stay safe</h3>
+            <p>
+              Don’t share personal information publicly. If someone makes you uncomfortable,
+              let PCM or a trusted admin know. Screenshots, proofs, and clear reports
+              help resolve things faster.
+            </p>
+            <p style="margin-top:0.5rem;">
+              The goal is not to control you, but to keep Bluemoon a place where people
+              feel relaxed opening the chat at any time of the day.
+            </p>
+          </div>
+          <div class="panel-actions">
+            <a class="btn-primary" href="#" id="rulesJoinLink" target="_blank" rel="noreferrer">I agree • Take me to Bluemoon ↗</a>
+            <button type="button" class="btn-ghost" data-panel-close>Back</button>
+          </div>
+          <div class="panel-meta">
+            <span class="panel-pill">Reports handled by PCM</span>
+            <span>Rule-breakers are removed quickly</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Page Panel -->
+  <section class="panel-overlay" id="panel-faq" aria-hidden="true">
+    <div class="panel-inner">
+      <div class="panel-header-row">
+        <div>
+          <div class="panel-title">Frequently asked questions</div>
+          <div class="panel-tagline">Before you join, clear your doubts</div>
+        </div>
+        <button type="button" class="panel-close" data-panel-close>
+          <span aria-hidden="true">←</span>
+          <span>Back to home</span>
+        </button>
+      </div>
+      <div class="panel-body">
+        <div>
+          <h3>Common questions</h3>
+          <ul class="panel-list">
+            <li><span class="bullet">•</span><span><strong>Is Bluemoon free?</strong> – Yes, fully free. No joining charges.</span></li>
+            <li><span class="bullet">•</span><span><strong>Any language rules?</strong> – Hinglish / Hindi / English sab allowed, bas respect hona chahiye.</span></li>
+            <li><span class="bullet">•</span><span><strong>Can I stay silent?</strong> – Yes. Lurk karna allowed hai, forceful engagement nahi hai.</span></li>
+            <li><span class="bullet">•</span><span><strong>Who are the admins?</strong> – PCM is the owner; other admins work under their guidelines.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="panel-highlight-box">
+            <h3>Final check before joining</h3>
+            <p>
+              If you want a place jaha log bakchodi bhi karein but limit me, aur
+              serious baat bhi ho jaye jab zarurat pade—Bluemoon might be the
+              right mix for you.
+            </p>
+            <p style="margin-top:0.5rem;">
+              If you’re expecting 24x7 spam, drama, or toxicity, then Bluemoon is
+              not made for that.
+            </p>
+          </div>
+          <div class="panel-actions">
+            <a class="btn-primary" href="#" id="faqJoinLink" target="_blank" rel="noreferrer">Join Bluemoon ↗</a>
+            <button type="button" class="btn-ghost" data-panel-close>Back</button>
+          </div>
+          <div class="panel-meta">
+            <span class="panel-pill">Free to join • Strict on rules</span>
+            <span>Click join only if you’re okay with that.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // === CONFIG: put your real Telegram link here ===
+    const inviteLink = "https://t.me/your_bluemoon_group_link"; // TODO: replace with real link
+
+    const memberDisplay = document.getElementById("memberCount");
+    const liveDisplay = document.getElementById("liveMemberCount");
+    const headerMemberDisplay = document.getElementById("headerMemberCount");
+    const joinButton = document.getElementById("joinButton");
+    const copyBtn = document.getElementById("copyInvite");
+    const headerEl = document.querySelector("header");
+    const revealEls = document.querySelectorAll(".reveal");
+    const statsToCount = document.querySelectorAll(".stat[data-count-from][data-count-to]");
+    const neonOrbit = document.getElementById("neonOrbit");
+    const previewCard = document.getElementById("previewCard");
+
+    const aboutJoinLink = document.getElementById("aboutJoinLink");
+    const highlightJoinLink = document.getElementById("highlightJoinLink");
+    const rulesJoinLink = document.getElementById("rulesJoinLink");
+    const faqJoinLink = document.getElementById("faqJoinLink");
+
+    // Panel elements
+    const panelTriggers = document.querySelectorAll("[data-panel]");
+    const panels = document.querySelectorAll(".panel-overlay");
+    const panelCloseButtons = document.querySelectorAll("[data-panel-close]");
+
+    // === Set all join links ===
+    if (joinButton) joinButton.href = inviteLink;
+    if (aboutJoinLink) aboutJoinLink.href = inviteLink;
+    if (highlightJoinLink) highlightJoinLink.href = inviteLink;
+    if (rulesJoinLink) rulesJoinLink.href = inviteLink;
+    if (faqJoinLink) faqJoinLink.href = inviteLink;
+
+    // --- Member count animation with IntersectionObserver ---
+    const animateNumber = (el, from, to, duration = 1600) => {
+      let start;
+      const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        const value = Math.floor(from + (to - from) * eased);
+        const formatted = value + "+";
+        const valueEl = el.querySelector(".stat-value");
+        if (valueEl) valueEl.textContent = formatted;
+        if (memberDisplay) memberDisplay.textContent = formatted;
+        if (liveDisplay) liveDisplay.textContent = formatted;
+        if (headerMemberDisplay) headerMemberDisplay.textContent = formatted + " members";
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    statsToCount.forEach((stat) => {
+      const from = parseInt(stat.getAttribute("data-count-from"), 10) || 0;
+      const to = parseInt(stat.getAttribute("data-count-to"), 10) || 0;
+
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              animateNumber(stat, from, to);
+              obs.disconnect();
+            }
+          });
+        },
+        { threshold: 0.4 }
+      );
+      observer.observe(stat);
+    });
+
+    // --- Reveal on scroll ---
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealEls.forEach((el) => revealObserver.observe(el));
+
+    // --- Header shrink on scroll ---
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        headerEl.classList.add("header-scrolled");
+      } else {
+        headerEl.classList.remove("header-scrolled");
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    // --- Copy invite link behaviour ---
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(inviteLink);
+          copyBtn.textContent = "Invite link copied";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy invite link";
+          }, 1600);
+        } catch (err) {
+          copyBtn.textContent = "Copy failed";
+          copyBtn.style.borderColor = "var(--danger)";
+          setTimeout(() => {
+            copyBtn.textContent = "Copy invite link";
+            copyBtn.style.borderColor = "";
+          }, 1600);
+        }
+      });
+    }
+
+    // --- Light parallax effect on preview card ---
+    if (previewCard && neonOrbit) {
+      previewCard.addEventListener("mousemove", (e) => {
+        const rect = previewCard.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const maxTilt = 6;
+        const tiltX = y * -maxTilt;
+        const tiltY = x * maxTilt;
+
+        previewCard.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+        neonOrbit.style.transform = `translate(${x * 16}px, ${y * 16}px)`;
+      });
+
+      previewCard.addEventListener("mouseleave", () => {
+        previewCard.style.transform = "";
+        neonOrbit.style.transform = "translate(0, 0)";
+      });
+    }
+
+    // --- Periodic shine on join button ---
+    if (joinButton) {
+      setInterval(() => {
+        joinButton.classList.add("btn-attention");
+        setTimeout(() => joinButton.classList.remove("btn-attention"), 1200);
+      }, 9000);
+    }
+
+    // --- Panel open/close logic (acts like separate pages) ---
+    const openPanel = (name) => {
+      const panel = document.getElementById(`panel-${name}`);
+      if (!panel) return;
+      panels.forEach((p) => {
+        p.classList.remove("is-open");
+        p.setAttribute("aria-hidden", "true");
+      });
+      panel.classList.add("is-open");
+      panel.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    };
+
+    const closePanels = () => {
+      panels.forEach((p) => {
+        p.classList.remove("is-open");
+        p.setAttribute("aria-hidden", "true");
+      });
+      document.body.style.overflow = "";
+    };
+
+    panelTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const name = trigger.dataset.panel;
+        if (!name) return;
+        openPanel(name);
+      });
+    });
+
+    panelCloseButtons.forEach((btn) => {
+      btn.addEventListener("click", closePanels);
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closePanels();
+    });
+  </script>
+</body>
+</html>
